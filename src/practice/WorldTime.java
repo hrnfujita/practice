@@ -1,5 +1,6 @@
 package practice;
 
+import java.time.LocalTime;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -90,16 +91,6 @@ public class WorldTime {
 			return;
 		}
 
-		if (writerIntHH < 0 || writerIntHH > 23) {
-			System.out.println("時(HH)は00～23までを入力してください：");
-			return;
-		}
-
-		if (!(writerColon.equals(":"))) {
-			System.out.println("時(HH)と分(MM)は\":\"で区切ってください：" + writerColon);
-			return;
-		}
-
 		try {
 			writerIntMM = Integer.parseInt(writerMM);
 		} catch (NumberFormatException e) {
@@ -107,10 +98,25 @@ public class WorldTime {
 			return;
 		}
 
-		if (writerIntMM < 0 || writerIntMM > 59) {
-			System.out.println("分(MM)は00～59までを入力してください：");
+		
+
+//		if (writerIntHH < 0 || writerIntHH > 23) {
+//			System.out.println("時(HH)は00～23までを入力してください：");
+//			return;
+//		}
+
+		if (!(writerColon.equals(":"))) {
+			System.out.println("時(HH)と分(MM)は\":\"で区切ってください：" + writerColon);
 			return;
 		}
+		
+		LocalTime lt = LocalTime.parse(writerIntHH + ":" + writerIntMM);
+
+
+//		if (writerIntMM < 0 || writerIntMM > 59) {
+//			System.out.println("分(MM)は00～59までを入力してください：");
+//			return;
+//		}
 
 		scanner.close(); //入力終了
 
