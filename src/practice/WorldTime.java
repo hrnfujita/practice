@@ -1,6 +1,5 @@
 package practice;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -25,12 +24,12 @@ public class WorldTime {
 		try {
 			inputCityNumber = scanner.nextInt();
 		} catch (InputMismatchException e) {
-			System.out.println("数値を入力してください：" + e);
+			System.out.println("都市の総数は数値を入力してください：" + e);
 			return;
 		}
 
 		if (inputCityNumber < 1 || inputCityNumber > maxCityCount) {
-			System.out.println("都市の総数は1～" + maxCityCount + "です：");
+			System.out.println("都市の総数は1～" + maxCityCount + "を入力してください");
 			return;
 		}
 
@@ -40,7 +39,7 @@ public class WorldTime {
 			String cityName = scanner.next(); //都市名
 			int cityNameLength = cityName.length();
 			if (cityNameLength < 1 || cityNameLength > 20 || !(cityName.matches("[a-z]+"))) {
-				System.out.println("都市名は英字小文字で1～20文字です（ユーザ）：" + cityName);
+				System.out.println("都市名（ユーザ）は英字小文字で1～20文字を入力してください：" + cityName);
 				return;
 			}
 			cityArray[i] = cityName;
@@ -48,12 +47,12 @@ public class WorldTime {
 			try {
 				timeDiff = scanner.nextInt();
 			} catch (InputMismatchException e) {
-				System.out.println("数値を入力してください：" + e);
+				System.out.println("時差は数値を入力してください：" + e);
 				return;
 			}
 
 			if (timeDiff < -12 || timeDiff > 14) {
-				System.out.println("時差は-12～14です：");
+				System.out.println("時差は-12～14を入力してください");
 				return;
 			}
 			timeDiffArray[i] = timeDiff;
@@ -62,7 +61,7 @@ public class WorldTime {
 		String writerCityName = scanner.next(); //投稿者の都市名
 		int writerCityNameLength = writerCityName.length();
 		if (writerCityNameLength < 1 || writerCityNameLength > 20 || !(writerCityName.matches("[a-z]+"))) {
-			System.out.println("都市名は英字小文字で1～20文字です（投稿者）：" + writerCityName);
+			System.out.println("都市名（投稿者）は英字小文字で1～20文字を入力してください：" + writerCityName);
 			return;
 		}
 
@@ -75,7 +74,7 @@ public class WorldTime {
 		}
 
 		if (cityCount >= inputCityNumber) {
-			System.out.println("投稿者の都市名は各ユーザの都市名に存在するものにしてください" + writerCityName);
+			System.out.println("投稿者の都市名は各ユーザの都市名に存在するものにしてください：" + writerCityName);
 			return;
 		}
 
@@ -92,14 +91,14 @@ public class WorldTime {
 		try {
 			writerIntHH = Integer.parseInt(writerHH);
 		} catch (NumberFormatException e) {
-			System.out.println("時(HH)は数値を入力してください：");
+			System.out.println("時(HH)は00～23までの２桁で入力してください");
 			return;
 		}
 
 		try {
 			writerIntMM = Integer.parseInt(writerMM);
 		} catch (NumberFormatException e) {
-			System.out.println("分(MM)は数値を入力してください：");
+			System.out.println("分(MM)は00～59までの２桁で入力してください");
 			return;
 		}
 
@@ -110,9 +109,9 @@ public class WorldTime {
 		}
 
 		try {
-			LocalTime lt = LocalTime.parse(writerIntHH + ":" + writerIntMM);
+			LocalTime lt = LocalTime.parse(writerHH + ":" + writerMM);
 		} catch (DateTimeParseException e) {
-			System.out.println("時(HH)は00～23、分(MM)は00～59までを入力してください：" + e);
+			System.out.println("時(HH)は00～23、分(MM)は00～59までの２桁で入力してください：" + e);
 			return;
 		}
 
@@ -124,34 +123,19 @@ public class WorldTime {
 		int writerTimeDiff = timeDiffArray[cityCount]; //投稿者の時差
 		int[] localTime = new int[maxCityCount]; //現地時間
 
-		//TEST CODE
-		String inpDateStr = "11:22";
-
 		// 取り扱う日付の形にフォーマット設定
-		DateFormat sdformat = new SimpleDateFormat("HH:mm");
-//		SimpleDateFormat sdformat = new SimpleDateFormat("HH:mm");
+		SimpleDateFormat sdformat = new SimpleDateFormat("HH:mm");
 
-		// Date型に変換( DateFromatクラスのperse() )
-		Date dateTime = null;
-		try {
-			dateTime = sdformat.parse(inpDateStr);
-		} catch (ParseException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+		for (int i = 0; i < inputCityNumber; i++) {
+			localTime[i] = writerIntHH + timeDiffArray[i] - writerTimeDiff;
+			Date dateTime = null;
+			try {
+				dateTime = sdformat.parse(localTime[i] + ":" + writerMM);
+			} catch (ParseException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
+			System.out.println(cityArray[i] + " " + sdformat.format(dateTime));
 		}
-
-		System.out.println("test,dateTime=" + dateTime);
-
-//		for (int i = 0; i < inputCityNumber; i++) {
-//			localTime[i] = writerIntHH + timeDiffArray[i] - writerTimeDiff;
-//			//24時間制の対応
-//			if (localTime[i] >= 24) {
-//				localTime[i] = localTime[i] - 24;
-//			} else if (localTime[i] < 0) {
-//				localTime[i] = localTime[i] + 24;
-//			}
-//			outputHH = String.format("%02d", localTime[i]);
-//			System.out.println(cityArray[i] + " " + outputHH + ":" + writerMM);
-//		}
 	}
 }
